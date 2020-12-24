@@ -1,4 +1,4 @@
-name: Kirby 64 CI
+name: Kirby 64 Pull Request CI
 
 on:
   pull_request_target:
@@ -27,7 +27,7 @@ jobs:
     - name: Clone Baserom
       uses: actions/checkout@v2
       with:
-        repository: ${ {secrets.SECRETREPO }}
+        repository: ${{ secrets.SECRETREPO }}
         token: ${{ secrets.SECRETTOKEN }}
         path: baserom
     - name: Copy Baserom
