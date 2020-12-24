@@ -27,6 +27,8 @@ jobs:
       run: 'echo "$BASEROMKEY" > key'
       env:
         BASEROMKEY: ${{secrets.BASEROMKEY}}
+    - name: Fix Baserom Key Permissions
+      run: chmod 400 key
     - name: Clone Baserom
       run: GIT_SSH_COMMAND='ssh -i key -o IdentitiesOnly=yes' git clone git@github.com:Mr-Wiseguy/kirby64-secret.git
     - name: Copy Baserom
