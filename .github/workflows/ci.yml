@@ -24,7 +24,7 @@ jobs:
     - name: Install Dependencies
       run: sudo apt install -y binutils-mips-linux-gnu build-essential git libcapstone-dev pkgconf python3
     - name: Save Baserom Key
-    - run: 'echo "$BASEROMKEY" > key'
+      run: 'echo "$BASEROMKEY" > key'
       env:
         BASEROMKEY: ${{secrets.BASEROMKEY}}
     - name: Clone Baserom
