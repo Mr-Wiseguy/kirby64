@@ -1,0 +1,21 @@
+name: Kirby 64 CI
+
+on:
+  push:
+    branches: [ master ]
+  pull_request_target:
+    branches: [ master ]
+  workflow_dispatch:
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Download Qemu Irix
+      run: wget https://github.com/n64decomp/qemu-irix/releases/download/v2.11-deb/qemu-irix-2.11.0-2169-g32ab296eef_amd64.deb
+    - name: Install Qemu Irix
+      run: sudo dpkg -i qemu-irix-2.11.0-2169-g32ab296eef_amd64.deb
+    - name: Build Libultra
+      run: make -C libreultra -j4
