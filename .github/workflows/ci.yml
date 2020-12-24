@@ -23,5 +23,21 @@ jobs:
       run: sudo dpkg -i qemu-irix-2.11.0-2169-g32ab296eef_amd64.deb
     - name: Install Dependencies
       run: sudo apt install -y binutils-mips-linux-gnu build-essential git libcapstone-dev pkgconf python3
+    - name: Save Baserom Key
+    - run: 'echo "$BASEROMKEY" > key'
+      env:
+        BASEROMKEY: ${{secrets.BASEROMKEY}}
+    - name: Clone Baserom
+      run: GIT_SSH_COMMAND='ssh -i key -o IdentitiesOnly=yes' git clone git@github.com:Mr-Wiseguy/kirby64-secret.git
+    - name: Copy Baserom
+      run: cp kirby64-secret/baserom.us.z64 .
     - name: Build Libultra
       run: make -C libreultra -j4
+    - name: Build Naudio
+      run: make -C libreultra naudio -j4
+    - name: Build Tools
+      run: make -C tools -j4
+    - name: Assemble F3DEX2
+      run: make -C f3dex2 VERSION=2.04H ARMIPS=../tools/armips
+    - name: Build Kirby 64
+      run: make -j4
