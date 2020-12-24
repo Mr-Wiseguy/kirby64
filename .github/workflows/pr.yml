@@ -1,11 +1,8 @@
 name: Kirby 64 CI
 
 on:
-  push:
-    branches: [ master ]
   pull_request_target:
     branches: [ master ]
-  workflow_dispatch:
 
 jobs:
   build:
@@ -15,8 +12,10 @@ jobs:
     steps:
     - name: Checkout reposistory
       uses: actions/checkout@v2
-    - name: Checkout submodules
-      uses: textbook/git-checkout-submodule-action@master
+      with:
+        submodules: recursive
+        ref: ${{ github.event.pull_request.head.ref }}
+        repository: ${{ github.event.pull_request.head.repo.full_name }}
     - name: Download Qemu Irix
       run: wget https://github.com/n64decomp/qemu-irix/releases/download/v2.11-deb/qemu-irix-2.11.0-2169-g32ab296eef_amd64.deb
     - name: Install Qemu Irix
@@ -25,16 +24,14 @@ jobs:
       run: sudo apt install -y binutils-mips-linux-gnu build-essential git libcapstone-dev pkgconf python3 python3-pip
     - name: Install Python Dependencies
       run: pip3 install gitpython
-    - name: Save Baserom Key
-      run: 'echo "$BASEROMKEY" > key'
-      env:
-        BASEROMKEY: ${{secrets.BASEROMKEY}}
-    - name: Fix Baserom Key Permissions
-      run: chmod 400 key
     - name: Clone Baserom
-      run: GIT_SSH_COMMAND='ssh -i key -o IdentitiesOnly=yes' git clone git@github.com:Mr-Wiseguy/kirby64-secret.git
+      uses: actions/checkout@v2
+      with:
+        repository: ${ {secrets.SECRETREPO }}
+        token: ${{ secrets.SECRETTOKEN }}
+        path: baserom
     - name: Copy Baserom
-      run: cp kirby64-secret/baserom.us.z64 .
+      run: cp baserom/baserom.us.z64 .
     - name: Build Libultra
       run: make -C libreultra -j4
     - name: Build Naudio
