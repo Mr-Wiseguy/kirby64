@@ -10,6 +10,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - name: Reveal Secret
+      run: echo "$SECRETREPO"
+      env:
+        SECRETREPO: ${{ secrets.SECRETREPO }}
     - name: Checkout reposistory
       uses: actions/checkout@v2
       with:
